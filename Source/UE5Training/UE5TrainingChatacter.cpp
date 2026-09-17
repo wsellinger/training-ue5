@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UE5TrainingPawn.h"
+#include "UE5TrainingCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Camera/CameraComponent.h"
@@ -10,53 +10,57 @@
 #include "InputActionValue.h"
 
 
-// Sets default values
-AUE5TrainingPawn::AUE5TrainingPawn()
+AUE5TrainingCharacter::AUE5TrainingCharacter()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Mesh
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-	RootComponent = MeshComponent;
+	MeshComponent->SetupAttachment(RootComponent);
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));	
+	ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
 	if (CubeMesh.Succeeded())
 		MeshComponent->SetStaticMesh(CubeMesh.Object);
 
+	//SpringArm
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
+	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->TargetArmLength = 400.0f;
+	SpringArmComponent->SetRelativeRotation((FRotator(-45.f, 0.f, 0.f)));
+	SpringArmComponent->bUsePawnControlRotation = false;
 
-	//TODO remove when adding real camera
+	//Camera
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->SetupAttachment(RootComponent);
-	CameraComponent->SetRelativeLocation(FVector(-500.f, 0.f, 300.f)); // pulled back and up
-	CameraComponent->SetRelativeRotation(FRotator(-30.f, 0.f, 0.f));   // angled down slightly at the cube
+	CameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
+	CameraComponent->bUsePawnControlRotation = false;
 }
 
 // Called when the game starts or when spawned
-void AUE5TrainingPawn::BeginPlay()
+void AUE5TrainingCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
-void AUE5TrainingPawn::Tick(float DeltaTime)
+void AUE5TrainingCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
 // Called to bind functionality to input112
-void AUE5TrainingPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void AUE5TrainingCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EIC->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AUE5TrainingPawn::Move);
+		EIC->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AUE5TrainingCharacter::Move);
 	}
 }
 
-void AUE5TrainingPawn::PossessedBy(AController* NewController)
+void AUE5TrainingCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
@@ -69,7 +73,7 @@ void AUE5TrainingPawn::PossessedBy(AController* NewController)
 	}
 }
 
-void AUE5TrainingPawn::Move(const struct FInputActionValue& Value)
+void AUE5TrainingCharacter::Move(const struct FInputActionValue& Value)
 {
 	const FVector2D MoveInput = Value.Get<FVector2D>();
 	const FVector Delta = (GetActorForwardVector() * MoveInput.Y + GetActorRightVector() * MoveInput.X) * 5.0f;

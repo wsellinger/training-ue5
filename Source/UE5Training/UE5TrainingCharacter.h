@@ -3,18 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
 #include "Components/StaticMeshComponent.h"
-#include "UE5TrainingPawn.generated.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "UE5TrainingCharacter.generated.h"
 
 UCLASS()
-class UE5TRAINING_API AUE5TrainingPawn : public APawn
+class UE5TRAINING_API AUE5TrainingCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	AUE5TrainingPawn();
+	AUE5TrainingCharacter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -24,6 +25,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* MeshComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	class USpringArmComponent* SpringArmComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* CameraComponent;
@@ -36,8 +40,8 @@ protected:
 
 	void Move(const struct FInputActionValue& Value);
 
-public:	
+public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;	
-	
+	virtual void Tick(float DeltaTime) override;
+
 };

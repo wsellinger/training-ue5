@@ -3,12 +3,12 @@
 
 #include "UE5TrainingGameMode.h"
 #include "UE5TrainingPlayerController.h"
-#include "UE5TrainingPawn.h"
+#include "UE5TrainingCharacter.h"
 
 
 AUE5TrainingGameMode::AUE5TrainingGameMode()
 {
     PlayerControllerClass = AUE5TrainingPlayerController::StaticClass();
-    DefaultPawnClass = AUE5TrainingPawn::StaticClass();
+    DefaultPawnClass = AUE5TrainingCharacter::StaticClass();
 }
 
