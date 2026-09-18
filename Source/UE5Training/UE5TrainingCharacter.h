@@ -17,6 +17,8 @@ public:
 	// Sets default values for this pawn's properties
 	AUE5TrainingCharacter();
 
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 	
 	//=== Overrides ===
@@ -42,10 +44,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputAction* MoveAction;
 
-	void Move(const struct FInputActionValue& Value);
+	UPROPERTY(EditAnywhere, Category = "Input")
+	class UInputAction* JumpAction;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+private:
+
+	void Move(const struct FInputActionValue& Value);
 
 };

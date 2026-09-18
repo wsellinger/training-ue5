@@ -57,6 +57,8 @@ void AUE5TrainingCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EIC->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AUE5TrainingCharacter::Move);
+		EIC->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EIC->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	}
 }
 
