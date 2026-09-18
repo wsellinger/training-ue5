@@ -76,7 +76,11 @@ void AUE5TrainingCharacter::PossessedBy(AController* NewController)
 void AUE5TrainingCharacter::Move(const struct FInputActionValue& Value)
 {
 	const FVector2D MoveInput = Value.Get<FVector2D>();
-	const FVector Delta = (GetActorForwardVector() * MoveInput.Y + GetActorRightVector() * MoveInput.X) * 5.0f;
-	AddActorWorldOffset(Delta);
+	
+	if (Controller != nullptr)
+	{
+		AddMovementInput(GetActorForwardVector(), MoveInput.Y);
+		AddMovementInput(GetActorRightVector(), MoveInput.X);
+	}
 }
 

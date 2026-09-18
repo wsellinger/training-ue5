@@ -18,10 +18,14 @@ public:
 	AUE5TrainingCharacter();
 
 protected:
-	// Called when the game starts or when spawned
+	
+	//=== Overrides ===
+
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void PossessedBy(AController* NewController) override;
+
+	//=== Unreal Properties
 
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* MeshComponent;
